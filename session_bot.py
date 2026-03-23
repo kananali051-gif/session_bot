@@ -1,6 +1,8 @@
 import asyncio
 import logging
 import os
+import threading
+from flask import Flask
 from telegram import Update
 from telegram.ext import (
     Application,
@@ -17,7 +19,23 @@ from telethon.errors import SessionPasswordNeededError, PhoneCodeInvalidError
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-BOT_TOKEN = "8014318114:AAEEmqdgqKGjkSDkiYt8MdS5rIIB393SEM0"
+BOT_TOKEN = "ضع_توكن_البوت_هنا"
+
+# ─── Flask Server لـ UptimeRobot ─────────────────────────────────────────────
+flask_app = Flask(__name__)
+
+@flask_app.route("/")
+def home():
+    return "✅ بوت استخراج الجلسة يعمل!", 200
+
+@flask_app.route("/ping")
+def ping():
+    return "pong", 200
+
+def run_flask():
+    port = int(os.environ.get("PORT", 8080))
+    flask_app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False)
+# ─────────────────────────────────────────────────────────────────────────────
 
 ASK_API_ID, ASK_API_HASH, ASK_PHONE, ASK_CODE, ASK_2FA = range(5)
 
@@ -198,6 +216,10 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 def main():
+    flask_thread = threading.Thread(target=run_flask, daemon=True)
+    flask_thread.start()
+    print("🌐 Flask server started for UptimeRobot")
+
     app = Application.builder().token(BOT_TOKEN).build()
 
     conv = ConversationHandler(
