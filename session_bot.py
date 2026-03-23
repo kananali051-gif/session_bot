@@ -19,7 +19,7 @@ from telethon.errors import SessionPasswordNeededError, PhoneCodeInvalidError
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-BOT_TOKEN = "ضع_توكن_البوت_هنا"
+BOT_TOKEN = "8014318114:AAEEmqdgqKGjkSDkiYt8MdS5rIIB393SEM0"
 
 # ─── Flask Server لـ UptimeRobot ─────────────────────────────────────────────
 flask_app = Flask(__name__)
